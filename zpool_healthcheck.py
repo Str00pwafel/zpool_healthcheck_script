@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 import re
 import requests
 import subprocess
+
 from datetime import datetime
 
 # Telegram bot token and chat ID
@@ -54,9 +56,12 @@ if result.returncode == 0:
             condition = re.search(pattern, pool, re.IGNORECASE)
 
             if condition:
-                log_message = f"Warning: Condition matched in pool '{pool_name}' - {condition.group()}"
+                log_message = f"Warning: Condition matched in pool '{pool_name}': {condition.group()}"
                 log_to_file(log_message)
                 send_telegram_message(f"Zpool Alert: {log_message}")
+            else:
+                log_message = f"No issues found in pool '{pool_name}'."
+                log_to_file(log_message)
 else:
     log_message = f"Error executing command:\n{result.stderr}"
     log_to_file(log_message)
